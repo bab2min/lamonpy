@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace ll
+namespace lamon
 {
     namespace exc
     {

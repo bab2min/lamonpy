@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\LatinLemmatizer.cpp" />
+    <ClCompile Include="src\Lemmatizer.cpp" />
     <ClCompile Include="src\PyMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Latinizer.h" />
-    <ClInclude Include="src\LatinLemmatizer.h" />
+    <ClInclude Include="src\Lemmatizer.h" />
     <ClInclude Include="src\PyUtils.h" />
     <ClInclude Include="src\serializer.hpp" />
     <ClInclude Include="src\Trie.hpp" />
@@ -38,6 +38,7 @@
     <ProjectGuid>{550C46E0-7118-49DE-87C2-9B2B19609E4A}</ProjectGuid>
     <RootNamespace>LatinLemmatizer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>LamonPy</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

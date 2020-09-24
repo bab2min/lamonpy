@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\LatinLemmatizer.cpp" />
+    <ClCompile Include="src\Lemmatizer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LatinFeat.h" />
     <ClInclude Include="src\layers.hpp" />
     <ClInclude Include="src\Latinizer.h" />
-    <ClInclude Include="src\LatinLemmatizer.h" />
+    <ClInclude Include="src\Lemmatizer.h" />
     <ClInclude Include="src\mmap.hpp" />
     <ClInclude Include="src\rfexception.hpp" />
     <ClInclude Include="src\rfobject.hpp" />
@@ -41,6 +41,7 @@
     <ProjectGuid>{967d4580-3a5b-4d9c-8726-bb8514652e74}</ProjectGuid>
     <RootNamespace>LatinLemmatizer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Lamon</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

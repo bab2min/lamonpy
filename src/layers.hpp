@@ -8,7 +8,7 @@
 #include "rfobject.hpp"
 #include "mmap.hpp"
 
-namespace ll
+namespace lamon
 {
     template<typename _ArrayTy>
     auto gelu(_ArrayTy&& x) -> decltype(0.f * x * (0.f + (0.f * (x + 0.f * x * x * x)).tanh()))

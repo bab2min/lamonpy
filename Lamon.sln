@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LatinLemmatizer", "LatinLemmatizer.vcxproj", "{967D4580-3A5B-4D9C-8726-BB8514652E74}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lamon", "Lamon.vcxproj", "{967D4580-3A5B-4D9C-8726-BB8514652E74}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LatinLemmatizerPython", "LatinLemmatizerPython.vcxproj", "{550C46E0-7118-49DE-87C2-9B2B19609E4A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LamonPy", "LamonPy.vcxproj", "{550C46E0-7118-49DE-87C2-9B2B19609E4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

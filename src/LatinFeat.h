@@ -2,7 +2,7 @@
 #include <vector>
 #include <array>
 
-namespace ll
+namespace lamon
 {
 	struct Feature
 	{

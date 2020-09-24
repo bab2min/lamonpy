@@ -7,7 +7,7 @@
 #include "rfexception.hpp"
 #include "mmap.hpp"
 
-namespace ll
+namespace lamon
 {
     template<typename _Ty = float>
     using ConstMatrix = Eigen::Map<const Eigen::Matrix<_Ty, -1, -1>, Eigen::Aligned128>;
@@ -37,7 +37,7 @@ namespace ll
             size_t _size = 0;
             std::vector<uint32_t> _shape;
 
-            static std::pair<std::string, Object> read_one(ll::utils::imstream& is)
+            static std::pair<std::string, Object> read_one(lamon::utils::imstream& is)
             {
                 size_t start_pos = is.tellg();
                 std::array<char, 4> magic;
@@ -120,10 +120,10 @@ namespace ll
                 return it->second;
             }
 
-            static ObjectCollection read_from(const ll::utils::MMap& mm)
+            static ObjectCollection read_from(const lamon::utils::MMap& mm)
             {
                 ObjectCollection ret;
-                ll::utils::imstream is{ mm };
+                lamon::utils::imstream is{ mm };
                 for (auto r = Object::read_one(is); !r.first.empty(); r = Object::read_one(is))
                 {
                     ret.emplace(r);

@@ -8,9 +8,9 @@
 #include "Latinizer.h"
 #include "RnnModel.hpp"
 
-namespace ll
+namespace lamon
 {
-	class LatinLemmatizer
+	class Lemmatizer
 	{
 	public:
 		struct LemmaInfo
@@ -54,6 +54,7 @@ namespace ll
 
 	private:
 		std::vector<std::string> lemmas;
+		std::vector<char> lemma_pos;
 		std::unordered_map<std::string, uint32_t> lemma_invmap;
 		std::unordered_map<std::string, std::vector<LemmaInfo>> form2lemma;
 		Latinizer latinizer;

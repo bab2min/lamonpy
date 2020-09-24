@@ -1,13 +1,13 @@
 #include <sstream>
-#include "LatinLemmatizer.h"
+#include "Lemmatizer.h"
 #include "serializer.hpp"
 
-using namespace ll;
+using namespace lamon;
 using namespace std;
 
-Feature LatinLemmatizer::parse_features(const string& str)
+Feature Lemmatizer::parse_features(const string& str)
 {
-	static unordered_map<char, Feature> map = {
+	const static unordered_map<char, Feature> map = {
 		{'s', Feature::numbers(1)},
 		{'p', Feature::numbers(2)},
 		
@@ -69,7 +69,7 @@ Feature LatinLemmatizer::parse_features(const string& str)
 	return f;
 }
 
-string LatinLemmatizer::to_string(Feature f)
+string Lemmatizer::to_string(Feature f)
 {
 	string ret;
 	if (f.mood) ret.push_back("DSITLN"[f.mood - 1]);
@@ -100,7 +100,7 @@ string LatinLemmatizer::to_string(Feature f)
 	return ret;
 }
 
-void LatinLemmatizer::load_dictionary(istream& vocab, istream& infl)
+void Lemmatizer::load_dictionary(istream& vocab, istream& infl)
 {
 	string line;
 	while (getline(vocab, line))
@@ -115,13 +115,15 @@ void LatinLemmatizer::load_dictionary(istream& vocab, istream& infl)
 		lemmas.emplace_back(line);
 	}
 
+	unordered_map<uint32_t, char> id_to_pos;
 	while (getline(infl, line))
 	{
 		istringstream iss{ line };
-		string form, lemma, features;
+		string form, lemma, features, pos;
 		getline(iss, form, '\t');
 		getline(iss, lemma, '\t');
 		getline(iss, features, '\t');
+		getline(iss, pos, '\t');
 
 		uint32_t lemma_id;
 		auto it = lemma_invmap.find(lemma);
@@ -134,6 +136,7 @@ void LatinLemmatizer::load_dictionary(istream& vocab, istream& infl)
 		{
 			lemma_id = it->second;
 		}
+		id_to_pos[lemma_id] = pos.empty() ? '\0' : pos[0];
 
 		form.erase(
 			latinizer.transform(form.begin(), form.end(), form.begin(), Latinizer::tx_integrate),
@@ -145,6 +148,9 @@ void LatinLemmatizer::load_dictionary(istream& vocab, istream& infl)
 			form2lemma[form].emplace_back(lif);
 		}
 	}
+
+	lemma_pos.resize(lemmas.size());
+	for (auto& p : id_to_pos) lemma_pos[p.first] = p.second;
 }
 
 
@@ -239,24 +245,24 @@ inline std::pair<int, int> read_uchar(_ChrIt s)
 	return { s[0], 1 };
 }
 
-void LatinLemmatizer::LemmaInfo::serializerWrite(ostream& ostr) const
+void Lemmatizer::LemmaInfo::serializerWrite(ostream& ostr) const
 {
 	serializer::writeMany(ostr, lemma_id, feature);
 }
 
-void LatinLemmatizer::LemmaInfo::serializerRead(istream& istr)
+void Lemmatizer::LemmaInfo::serializerRead(istream& istr)
 {
 	serializer::readMany(istr, lemma_id, feature);
 }
 
-void LatinLemmatizer::save_model(ostream& ofs) const
+void Lemmatizer::save_model(ostream& ofs) const
 {
-	serializer::writeMany(ofs, lemmas, form2lemma);
+	serializer::writeMany(ofs, lemmas, lemma_pos, form2lemma);
 }
 
-void LatinLemmatizer::load_model(istream& ifs)
+void Lemmatizer::load_model(istream& ifs)
 {
-	serializer::readMany(ifs, lemmas, form2lemma);
+	serializer::readMany(ifs, lemmas, lemma_pos, form2lemma);
 	
 	for (size_t i = 0; i < lemmas.size(); ++i)
 	{
@@ -264,7 +270,7 @@ void LatinLemmatizer::load_model(istream& ifs)
 	}
 }
 
-auto LatinLemmatizer::lemmatize(const char* str, size_t len) const -> vector<TokenInfo>
+auto Lemmatizer::lemmatize(const char* str, size_t len) const -> vector<TokenInfo>
 {
 	vector<TokenInfo> ret;
 	if (!len) return ret;
@@ -365,12 +371,12 @@ auto LatinLemmatizer::lemmatize(const char* str, size_t len) const -> vector<Tok
 	return ret;
 }
 
-auto LatinLemmatizer::lemmatize(const string& str) const -> vector<TokenInfo>
+auto Lemmatizer::lemmatize(const string& str) const -> vector<TokenInfo>
 {
 	return lemmatize(str.data(), str.size());
 }
 
-auto LatinLemmatizer::tag(const LatinRnnModel& tagging_model, 
+auto Lemmatizer::tag(const LatinRnnModel& tagging_model, 
 	const std::string& str, size_t beam_size, 
 	bool bidirection) const -> vector<Candidate>
 {

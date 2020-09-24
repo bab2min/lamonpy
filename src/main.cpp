@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
-#include "LatinLemmatizer.h"
+#include "Lemmatizer.h"
 #include "RnnModel.hpp"
 #include "text.hpp"
 
@@ -8,8 +8,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	ll::LatinLemmatizer lemmatizer;
-	ll::LatinRnnModel tagging_model{ "comp.bidi.uv.quat.bin" };
+	lamon::Lemmatizer lemmatizer;
+	lamon::LatinRnnModel tagging_model{ "comp.bidi.uv.quat.bin" };
 	
 	if(0)
 	{
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	struct TestSet
 	{
 		string sent;
-		vector<tuple<string, string, ll::Feature>> golds;
+		vector<tuple<string, string, lamon::Feature>> golds;
 	};
 	vector<TestSet> sets;
 	while (getline(testset, line))
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 
 			if (field[1].empty()) continue;
 			auto feat = lemmatizer.parse_features(field[2]);
-			if (feat == ll::Feature::cases(7)) feat = {};
+			if (feat == lamon::Feature::cases(7)) feat = {};
 			ts.golds.emplace_back(field[0], field[1], feat);
 		}
 		sets.emplace_back(move(ts));
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 			{
 				++ptot;
 				bool lc = lemmatizer.get_lemma(r.lemma_id) == get<1>(ts.golds[gidx]);
-				if (r.feature == ll::Feature::cases(7)) r.feature = {};
+				if (r.feature == lamon::Feature::cases(7)) r.feature = {};
 				bool tc = r.feature == get<2>(ts.golds[gidx]);
 				if (lc) ++pl;
 				if (tc) ++pt;

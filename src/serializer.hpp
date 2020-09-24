@@ -8,7 +8,7 @@
 #include <vector>
 #include "text.hpp"
 
-namespace ll
+namespace lamon
 {
 	namespace serializer
 	{
@@ -264,59 +264,59 @@ namespace ll
 
 #define DEFINE_SERIALIZER(...) void serializerRead(std::istream& istr)\
 {\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 }\
 void serializerWrite(std::ostream& ostr) const\
 {\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
-#define DEFINE_SERIALIZER_WITH_VERSION(v,...) void serializerRead(ll::serializer::version_holder<v>, std::istream& istr)\
+#define DEFINE_SERIALIZER_WITH_VERSION(v,...) void serializerRead(lamon::serializer::version_holder<v>, std::istream& istr)\
 {\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 }\
-void serializerWrite(ll::serializer::version_holder<v>, std::ostream& ostr) const\
+void serializerWrite(lamon::serializer::version_holder<v>, std::ostream& ostr) const\
 {\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
 #define DEFINE_SERIALIZER_CALLBACK(onRead, ...) void serializerRead(std::istream& istr)\
 {\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 	this->onRead();\
 }\
 void serializerWrite(std::ostream& ostr) const\
 {\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
 #define DEFINE_SERIALIZER_AFTER_BASE(base, ...) void serializerRead(std::istream& istr)\
 {\
 	base::serializerRead(istr);\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 }\
 void serializerWrite(std::ostream& ostr) const\
 {\
 	base::serializerWrite(ostr);\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
-#define DEFINE_SERIALIZER_AFTER_BASE_WITH_VERSION(base, v, ...) void serializerRead(ll::serializer::version_holder<v> _v, std::istream& istr)\
+#define DEFINE_SERIALIZER_AFTER_BASE_WITH_VERSION(base, v, ...) void serializerRead(lamon::serializer::version_holder<v> _v, std::istream& istr)\
 {\
 	base::serializerRead(_v, istr);\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 }\
-void serializerWrite(ll::serializer::version_holder<v> _v, std::ostream& ostr) const\
+void serializerWrite(lamon::serializer::version_holder<v> _v, std::ostream& ostr) const\
 {\
 	base::serializerWrite(_v, ostr);\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
-#define DEFINE_SERIALIZER_BASE_WITH_VERSION(base, v) void serializerRead(ll::serializer::version_holder<v> _v, std::istream& istr)\
+#define DEFINE_SERIALIZER_BASE_WITH_VERSION(base, v) void serializerRead(lamon::serializer::version_holder<v> _v, std::istream& istr)\
 {\
 	base::serializerRead(_v, istr);\
 }\
-void serializerWrite(ll::serializer::version_holder<v> _v, std::ostream& ostr) const\
+void serializerWrite(lamon::serializer::version_holder<v> _v, std::ostream& ostr) const\
 {\
 	base::serializerWrite(_v, ostr);\
 }
@@ -324,20 +324,20 @@ void serializerWrite(ll::serializer::version_holder<v> _v, std::ostream& ostr) c
 #define DEFINE_SERIALIZER_AFTER_BASE_CALLBACK(base, onRead, ...) void serializerRead(std::istream& istr)\
 {\
 	base::serializerRead(istr);\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 	this->onRead();\
 }\
 void serializerWrite(std::ostream& ostr) const\
 {\
 	base::serializerWrite(ostr);\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }
 
 #define DEFINE_SERIALIZER_VIRTUAL(...) virtual void serializerRead(std::istream& istr)\
 {\
-	ll::serializer::readMany(istr, __VA_ARGS__);\
+	lamon::serializer::readMany(istr, __VA_ARGS__);\
 }\
 virtual void serializerWrite(std::ostream& ostr) const\
 {\
-	ll::serializer::writeMany(ostr, __VA_ARGS__);\
+	lamon::serializer::writeMany(ostr, __VA_ARGS__);\
 }

@@ -4,7 +4,7 @@
 #include <functional>
 #include <iterator>
 
-namespace ll
+namespace lamon
 {
 	template<typename _Key, typename _Value, typename _KeyStore>
 	struct Trie

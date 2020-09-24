@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include "Trie.hpp"
 
-namespace ll
+namespace lamon
 {
 	template<typename _Ty, int _size>
 	class zero_array : public std::array<_Ty, _size>

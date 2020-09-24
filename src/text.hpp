@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cstdio>
 
-namespace ll
+namespace lamon
 {
 	namespace text
 	{

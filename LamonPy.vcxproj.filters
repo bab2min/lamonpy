@@ -4,9 +4,6 @@
     <ClInclude Include="src\Latinizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\LatinLemmatizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\serializer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -14,6 +11,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\PyUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lemmatizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -26,10 +26,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\LatinLemmatizer.cpp">
+    <ClCompile Include="src\PyMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PyMain.cpp">
+    <ClCompile Include="src\Lemmatizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

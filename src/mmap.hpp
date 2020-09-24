@@ -7,7 +7,7 @@
 #ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
-namespace ll
+namespace lamon
 {
 	namespace utils
 	{
@@ -88,7 +88,7 @@ namespace ll
 #include <unistd.h>
 #include <fcntl.h>
 
-namespace ll
+namespace lamon
 {
 	namespace utils
 	{
@@ -175,7 +175,7 @@ namespace ll
 }
 #endif
 
-namespace ll
+namespace lamon
 {
 	namespace utils
 	{

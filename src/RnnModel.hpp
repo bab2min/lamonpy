@@ -3,7 +3,7 @@
 #include "layers.hpp"
 #include "LatinFeat.h"
 
-namespace ll
+namespace lamon
 {
     class RnnCell
     {
