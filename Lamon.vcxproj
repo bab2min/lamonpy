@@ -33,6 +33,7 @@
     <ClInclude Include="src\RnnModel.hpp" />
     <ClInclude Include="src\serializer.hpp" />
     <ClInclude Include="src\text.hpp" />
+    <ClInclude Include="src\ThreadPool.hpp" />
     <ClInclude Include="src\Trie.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -61,13 +61,19 @@ namespace lamon
 
 	public:
 		static Feature parse_features(const std::string& str);
-		static std::string to_string(Feature f);
+		static std::string to_vivens_tag(Feature f);
+		static std::string to_perseus_tag(Feature f, char pos);
 		
 		void load_dictionary(std::istream& vocab, std::istream& infl);
 
 		const std::string& get_lemma(uint32_t lemma_id) const
 		{
 			return lemmas[lemma_id];
+		}
+
+		char get_pos(uint32_t lemma_id) const
+		{
+			return lemma_pos[lemma_id];
 		}
 
 		void save_model(std::ostream& ostr) const;

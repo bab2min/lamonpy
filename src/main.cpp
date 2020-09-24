@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 		for (auto& r : ret)
 		{
 			output << lemmatizer.get_lemma(r.lemma_id);
-			if (r.feature) output << '.' << lemmatizer.to_string(r.feature);
+			if (r.feature) output << '.' << lemmatizer.to_vivens_tag(r.feature);
 			output << ' ';
 
 			string form = ts.sent.substr(r.start, r.end - r.start);

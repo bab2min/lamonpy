@@ -342,3 +342,6 @@ healthchecksdb
 /dict.tsv
 /comp.vocab.txt
 /vocab.txt
+/include/Eigen
+/build
+/lamonpy.egg-info

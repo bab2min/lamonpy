@@ -141,7 +141,7 @@ namespace lamon
         }
 
         template<typename _EigenTy1, typename _EigenTy2, typename _EigenTy3>
-        auto operator()(_EigenTy1&& input, _EigenTy2& c_state, _EigenTy3& h_state) const
+        _EigenTy3& operator()(_EigenTy1&& input, _EigenTy2& c_state, _EigenTy3& h_state) const
         {
             Eigen::VectorXf gates = ((kernel.topRows(input.rows()).transpose() * input) + kernel.bottomRows(h_state.rows()).transpose() * h_state).colwise() + bias;
             const size_t gate_size = h_size();

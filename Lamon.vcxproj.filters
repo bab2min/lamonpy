@@ -56,5 +56,8 @@
     <ClInclude Include="src\Lemmatizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ThreadPool.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
