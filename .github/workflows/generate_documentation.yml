@@ -1,0 +1,59 @@
+name: Generate the documentation
+
+on:
+  push:
+    tags: 
+      - 'v*.*.*'
+      - '!v*.*.*d'
+
+jobs:
+  build_manylinux:
+    name: Build for manylinux
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        language: [en]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        wget https://github.com/eigenteam/eigen-git-mirror/archive/3.3.7.tar.gz
+        tar -zxvf 3.3.7.tar.gz
+        mv eigen-git-mirror-3.3.7 include
+    - name: build
+      run: |
+        python3 -m pip install pdoc3 numpy
+        export LAMONPY_LANG=${{ matrix.language }}
+        python3 setup.py install
+    - name: gen doc
+      run: |
+        export LAMONPY_VER="`python3 -m pip show lamonpy | grep Version | cut -d' ' -f2`"
+        export LAMONPY_LANG=${{ matrix.language }}
+        python3 -m pdoc --html lamonpy
+        sed -i -E "s/documentation<\/title>/documentation (v${LAMONPY_VER})<\/title>/" html/lamonpy/*.html
+        sed -i -E 's/<\/title>/<\/title><link rel="icon" type="image\/png" sizes="192x192" href="\/lamonpy\/favicon-192x192.png">/' html/lamonpy/*.html
+        sed -i -E 's/(<p><img alt="" src="https:\/\/badge.fury.io\/py\/lamonpy.svg"><\/p>)/<script async defer src="https:\/\/buttons.github.io\/buttons.js"><\/script> <p><img alt="" src="https:\/\/badge.fury.io\/py\/lamonpy.svg"> <a class="github-button" href="https:\/\/github.com\/bab2min\/lamonpy" data-size="large" data-show-count="true" aria-label="Star bab2min\/lamonpy on GitHub">Star<\/a> <a class="github-button" href="https:\/\/github.com\/bab2min\/lamonpy\/issues" data-size="large" data-show-count="true" aria-label="Issue bab2min\/lamonpy on GitHub">Issue<\/a> <\/p>/' html/lamonpy/*.html
+        sed -i -e '/<nav id="sidebar">/r document/document_header.html' html/lamonpy/*.html
+        sed -i -E 's/(<\/body>)/<script async src="https:\/\/www.googletagmanager.com\/gtag\/js?id=UA-35651242-12"><\/script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag("js", new Date()); gtag("config", "UA-35651242-12"); <\/script>\n\1/' html/lamonpy/*.html
+        bash document/pdoc_localization.sh html/lamonpy/*.html
+        mkdir -p ../g
+        pushd ../g
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/bab2min/bab2min.github.io
+        mkdir -p bab2min.github.io/lamonpy/v${LAMONPY_VER}/${{ matrix.language }}
+        popd
+        cp html/lamonpy/* ../g/bab2min.github.io/lamonpy/v${LAMONPY_VER}/${{ matrix.language }}
+        pushd ../g/bab2min.github.io
+        git config user.email "bab2min@gmail.com"
+        git config user.name "bab2min"
+        git add .
+        git commit -m "v${LAMONPY_VER} ${{ matrix.language }}"
+        git push
+        popd
+        
