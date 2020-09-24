@@ -50,7 +50,7 @@ struct LamonObject
 			if (!ifs)
 			{
 				ifstream ifs{ spath + dict_path, ios_base::binary };
-				if (!ifs) throw runtime_error{ string{"Cannot find '"} + dict_path + "'" };
+				if (!ifs) throw runtime_error{ string{"Cannot find '"} + spath + dict_path + "'" };
 				self->lemmatizer.load_model(ifs);
 			}
 			else
