@@ -15,5 +15,5 @@ def test_tag_multi():
     sents.append("quicquid in nobis tui mortale fuerat, ignis evictus tulit:")
     sents.append("Peregrinationes meas tu numerasti pone lacrimas meas in utre tuo nonne in supputatione tua?")
     sents.append("Quemadmodum stultus est qui empturus equum non ipsum inspicit sed stratum eius ac frenos, sic stultissimus est qui hominem aut ex veste aut ex conditione, quae nobis vestis modo circumdata est, aestimandum putat.")
-    for r in inst.tag(sents):
+    for r in inst.tag_multi(sents):
         print(r)

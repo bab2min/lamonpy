@@ -344,3 +344,4 @@ healthchecksdb
 /include/Eigen
 /build
 /lamonpy.egg-info
+/*.bin
