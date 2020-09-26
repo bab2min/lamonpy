@@ -230,6 +230,18 @@ Demo
 ----
 https://latina.bab2min.pe.kr/xe/lTagger (Korean)
 
+Larger Models
+------------
+Due to the package size limit of pypi, the distributed wheel package contains `base model` only. We provide larger models by Google-drive links.
+
+* Large model : https://drive.google.com/file/d/1u8LdvD-zKtrj7kDRs6CjQw74ZG6aT8jS/view?usp=sharing
+* Large model (unsupervised) : https://drive.google.com/file/d/1nw8LO_1o0O894gXzgQ7Hx5Fyikvy1w2u/view?usp=sharing
+
+You can use these models by passing the model path to `Lamon.__init__` as arguments.
+::
+
+    from lamonpy import Lamon
+    lamon = Lamon(dict_path='dict.large.bin', tagger_path='tagger.large.bin')
 
 License
 -------
