@@ -5,7 +5,7 @@ Lamon, The Latin POS Tagger & Lemmatizer
     :target: https://pypi.python.org/pypi/lamonpy
 
 
-`Lamon`(LAtin MOrphological tools, pronounced /leɪmən/) is a simple POS tagger & lemmatizer for Latin written in C++ 
+`Lamon` (LAtin MOrphological tools, pronounced /leɪmən/) is a simple POS tagger & lemmatizer for Latin written in C++ 
 and `Lamonpy` is a Python package of Lamon. You can easily obtain lemma and tag of each word in given text using Lamonpy.
 
 
