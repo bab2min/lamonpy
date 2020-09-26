@@ -39,7 +39,7 @@ for arch, aopt in arch_levels.items():
 
 setup(
     name='lamonpy',
-    version="0.0.1",
+    version="0.1.0",
     description='Lamonpy, Latin POS Tagger & Lemmatizer for Python',
     long_description=long_description,
 
