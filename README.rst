@@ -163,6 +163,7 @@ Lamon supports three types of tagset.
 
 2. vivens
 ::
+
     # Moods
     D: indicative
     S: subjunctive
