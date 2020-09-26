@@ -338,10 +338,10 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-*.bin
-/dict.tsv
-/comp.vocab.txt
-/vocab.txt
+/*.tsv
+/*.txt
 /include/Eigen
 /build
 /lamonpy.egg-info
+/*.bin
+.vscode

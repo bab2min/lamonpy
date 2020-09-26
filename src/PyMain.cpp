@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #define MAIN_MODULE
 #include "PyDoc.h"
 #include "PyUtils.h"
@@ -40,17 +41,26 @@ struct LamonObject
 			&dict_path, &tagger_path, &approx_size)) return -1;
 		try
 		{
-			PyObject* module = PyImport_AddModule("lamonpy");
-			if (!module) throw bad_exception{};
-			string spath = get_module_filename(module);
-			size_t pos1 = spath.rfind('/') + 1, pos2 = spath.rfind('\\') + 1;
-			spath = spath.substr(0, max(pos1, pos2));
+			
+			string spath;
+			try
+			{
+				PyObject* module = PyImport_AddModule("lamonpy");
+				spath = get_module_filename(module);
+				size_t pos1 = spath.rfind('/') + 1, pos2 = spath.rfind('\\') + 1;
+				spath = spath.substr(0, max(pos1, pos2));
+			}
+			catch (const bad_exception&)
+			{
+				cerr << "[warning] cannot find the path of the module `lamonpy`. " << endl;
+				PyErr_Clear();
+			}
 
 			ifstream ifs{ dict_path, ios_base::binary };
 			if (!ifs)
 			{
 				ifstream ifs{ spath + dict_path, ios_base::binary };
-				if (!ifs) throw runtime_error{ string{"Cannot find '"} + dict_path + "'" };
+				if (!ifs) throw runtime_error{ string{"Cannot find '"} + spath + dict_path + "'" };
 				self->lemmatizer.load_model(ifs);
 			}
 			else
@@ -273,7 +283,7 @@ static PyObject* LL_tag(LamonObject* self, PyObject* args, PyObject* kwargs)
 		}
 
 		auto ret = self->lemmatizer.tag(*self->rnn_model, text, max(beam_size, (size_t)10), !!bidirection);
-		ret.erase(ret.begin() + beam_size, ret.end());
+		if(ret.size() > beam_size) ret.erase(ret.begin() + beam_size, ret.end());
 		return build_tagged_result(ret, self->lemmatizer, text, tag_style);
 	}
 	catch (const bad_exception&)
@@ -405,7 +415,7 @@ static PyObject* LL_tag_multi(LamonObject* self, PyObject* args, PyObject* kwarg
 			futures.emplace_back(self->pool->enqueue([=](size_t thread_id, const string& text)
 			{
 				auto ret = self->lemmatizer.tag(*self->rnn_model, text, max(beam_size, (size_t)10), !!bidirection);
-				ret.erase(ret.begin() + beam_size, ret.end());
+				if(ret.size() > beam_size) ret.erase(ret.begin() + beam_size, ret.end());
 				return make_pair(text, move(ret));
 			}, utf8));
 		}

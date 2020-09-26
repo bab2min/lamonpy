@@ -91,14 +91,14 @@ namespace lamon
             ConstVector<_Ty> to_vector() const
             {
                 if (shape().size() != 1) throw exc::ShapeMismatch{ "cannot convert to vector" };
-                return ConstVector<_Ty>{ ptr<_Ty>(), shape()[0] };
+                return ConstVector<_Ty>{ ptr<_Ty>(), (Eigen::Index)shape()[0] };
             }
 
             template<typename _Ty = float>
             ConstMatrix<_Ty> to_matrix() const
             {
                 if (shape().size() != 2) throw exc::ShapeMismatch{ "cannot convert to matrix" };
-                return ConstMatrix<_Ty>{ ptr<_Ty>(), shape()[0], shape()[1] };
+                return ConstMatrix<_Ty>{ ptr<_Ty>(), (Eigen::Index)shape()[0], (Eigen::Index)shape()[1] };
             }
 
             template<typename _Ty = float>
@@ -106,7 +106,7 @@ namespace lamon
             {
                 if (shape().size() != 3) throw exc::ShapeMismatch{ "cannot convert to matrix" };
                 size_t stride = shape()[0] * shape()[1];
-                return ConstMatrix<_Ty>{ ptr<_Ty>() + stride * last_index, shape()[0], shape()[1] };
+                return ConstMatrix<_Ty>{ ptr<_Ty>() + stride * last_index, (Eigen::Index)shape()[0], (Eigen::Index)shape()[1] };
             }
         };
 

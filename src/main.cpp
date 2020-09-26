@@ -9,19 +9,19 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	lamon::Lemmatizer lemmatizer;
-	lamon::LatinRnnModel tagging_model{ "comp.bidi.uv.quat.bin" };
+	lamon::LatinRnnModel tagging_model{ "lamonpy/tagger.bin" };
 	
-	if(0)
+	if(1)
 	{
-		ifstream vocab{ "comp.vocab.txt" }, infl{ "dict.tsv" };
+		ifstream vocab{ "comp.vocab.uv.large.txt" }, infl{ "dict.tsv" };
 		lemmatizer.load_dictionary(vocab, infl);
 
-		ofstream ofs{ "comp.dict.bin", ios_base::binary };
+		ofstream ofs{ "dict.uv.large.bin", ios_base::binary };
 		lemmatizer.save_model(ofs);
 	}
 	else
 	{
-		ifstream ifs{ "comp.dict.bin", ios_base::binary };
+		ifstream ifs{ "dict.bin", ios_base::binary };
 		lemmatizer.load_model(ifs);
 	}
 
