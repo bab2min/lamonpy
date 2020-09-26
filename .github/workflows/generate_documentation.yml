@@ -3,7 +3,7 @@ name: Generate the documentation
 on:
   push:
     tags: 
-      - 'v*.*.*'
+      - '!v*.*.*'
       - '!v*.*.*d'
 
 jobs:

@@ -3,6 +3,10 @@ from setuptools import setup, Extension
 import numpy as np
 import os, os.path, struct, re, platform
 
+long_description = ''
+for line in open(os.path.join(here, 'README.rst'), encoding='utf-8'):
+    long_description += re.sub(r'^<.+>\s*$', '', line)
+
 sources = ['src/PyMain.cpp', 'src/Lemmatizer.cpp']
 largs = ['-pthread']
 arch_levels = {'':'', 'sse2':'-msse2', 'avx':'-mavx', 'avx2':'-mavx2 -mfma'}
@@ -34,9 +38,9 @@ for arch, aopt in arch_levels.items():
 
 setup(
     name='lamonpy',
-    version="0.0.0",
+    version="0.0.1",
     description='Lamonpy, Latin POS Tagger & Lemmatizer for Python',
-    long_description='',
+    long_description=long_description,
 
     url='https://github.com/bab2min/lamonpy',
 
@@ -70,5 +74,6 @@ setup(
     keywords='NLP,Latin',
 
     packages = ['lamonpy'],
+    include_package_data=True,
     ext_modules=modules
 )

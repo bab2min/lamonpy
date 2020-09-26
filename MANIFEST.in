@@ -1,4 +1,5 @@
 recursive-include lamonpy *
 recursive-include src *
 
-include LICENSE.txt
+include LICENSE
+global-exclude *.py[cod]
