@@ -3,6 +3,7 @@ from setuptools import setup, Extension
 import numpy as np
 import os, os.path, struct, re, platform
 
+here = os.path.abspath(os.path.dirname(__file__))
 long_description = ''
 for line in open(os.path.join(here, 'README.rst'), encoding='utf-8'):
     long_description += re.sub(r'^<.+>\s*$', '', line)
