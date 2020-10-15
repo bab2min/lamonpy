@@ -249,5 +249,8 @@ License
 
 History
 -------
+* 0.2.0 (2020-10-16)
+    * `[NUM]` token for Roman numeral was added.
+    * The accuracy was slightly increased by introducing joint lemma-tag layer.
 * 0.1.0 (2020-09-26)
     * the first version of `lamonpy`
