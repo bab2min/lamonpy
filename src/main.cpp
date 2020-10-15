@@ -9,21 +9,23 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	lamon::Lemmatizer lemmatizer;
-	lamon::LatinRnnModel tagging_model{ "lamonpy/tagger.bin" };
+	lamon::LatinRnnModel tagging_model{ "tagger.2.bin" };
 	
 	if(1)
 	{
-		ifstream vocab{ "comp.vocab.uv.large.txt" }, infl{ "dict.tsv" };
+		ifstream vocab{ "comp.vocab.2.txt" }, infl{ "dict.tsv" };
 		lemmatizer.load_dictionary(vocab, infl);
 
-		ofstream ofs{ "dict.uv.large.bin", ios_base::binary };
+		ofstream ofs{ "dict.2.bin", ios_base::binary };
 		lemmatizer.save_model(ofs);
 	}
 	else
 	{
-		ifstream ifs{ "dict.bin", ios_base::binary };
+		ifstream ifs{ "dict.2.bin", ios_base::binary };
 		lemmatizer.load_model(ifs);
 	}
+
+	//lemmatizer.lemmatize(". , 1.1 1,1 i MCMXCVIII MCCC MMVII iiii iiii0 vi xii ivi ix iv xiv xix");
 
 	ifstream testset{ "D:/PythonRepo2/parallel_corpus/data/latin_gold.tsv" };
 	string line, word;
@@ -55,16 +57,16 @@ int main(int argc, char** argv)
 	}
 
 	size_t tot = 0, lcorrect = 0, tcorrect = 0, bcorrect = 0;
-	ofstream output{ "D:/PythonRepo2/parallel_corpus/cpp.out" };
+	//ofstream output{ "D:/PythonRepo2/parallel_corpus/cpp.out" };
 	for(auto& ts : sets)
 	{
 		auto ret = lemmatizer.tag(tagging_model, ts.sent, 20, true)[0].second;
 		size_t gidx = 0, ptot = 0, pl = 0, pt = 0, pb = 0;
 		for (auto& r : ret)
 		{
-			output << lemmatizer.get_lemma(r.lemma_id);
-			if (r.feature) output << '.' << lemmatizer.to_vivens_tag(r.feature);
-			output << ' ';
+			//output << lemmatizer.get_lemma(r.lemma_id);
+			//if (r.feature) output << '.' << lemmatizer.to_vivens_tag(r.feature);
+			//output << ' ';
 
 			string form = ts.sent.substr(r.start, r.end - r.start);
 			if (gidx < ts.golds.size() && form == get<0>(ts.golds[gidx]))
@@ -80,22 +82,11 @@ int main(int argc, char** argv)
 			}
 			else continue;
 		}
-		output << endl;
+		//output << endl;
 		tot += ptot;
 		lcorrect += pl;
 		tcorrect += pt;
 		bcorrect += pb;
-		/*if (pb / (double)ptot < 0.5)
-		{
-			cout << ts.sent << endl << "    ";
-			for (auto& r : ret)
-			{
-				cout << lemmatizer.get_lemma(r.lemma_id);
-				if (r.feature) cout << '.' << lemmatizer.to_string(r.feature);
-				cout << ' ';
-			}
-			cout << endl;
-		}*/
 	}
 	printf("L:%f (%zd) T:%f (%zd) B:%f (%zd) / total(%zd)\n", lcorrect / (double)tot, lcorrect, tcorrect / (double)tot, tcorrect, bcorrect / (double)tot, bcorrect, tot);
 	return 0;

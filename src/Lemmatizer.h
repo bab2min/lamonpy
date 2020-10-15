@@ -58,11 +58,13 @@ namespace lamon
 		std::unordered_map<std::string, uint32_t> lemma_invmap;
 		std::unordered_map<std::string, std::vector<LemmaInfo>> form2lemma;
 		Latinizer latinizer;
+		size_t num_tok_id = 0;
 
 	public:
 		static Feature parse_features(const std::string& str);
 		static std::string to_vivens_tag(Feature f);
 		static std::string to_perseus_tag(Feature f, char pos);
+		static bool is_numeral(const std::string& token);
 		
 		void load_dictionary(std::istream& vocab, std::istream& infl);
 

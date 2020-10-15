@@ -102,11 +102,30 @@ namespace lamon
         {
         }
 
+        size_t input_size() const
+        {
+            return kernel.rows();
+        }
+
+        size_t output_size() const
+        {
+            return kernel.cols();
+        }
+
         template<typename _EigenTy>
         auto operator()(_EigenTy&& x) const
             -> decltype((kernel.transpose()* x).colwise() + bias)
         {
             return (kernel.transpose() * x).colwise() + bias;
+        }
+
+        template<typename _Ty1, typename _Ty2>
+        auto apply_concated(_Ty1&& x, _Ty2&& y) const
+            -> decltype((kernel.topRows(x.rows()).transpose()* x
+                + kernel.bottomRows(y.rows()).transpose() * y).colwise() + bias)
+        {
+            return (kernel.topRows(x.rows()).transpose() * x
+                + kernel.bottomRows(y.rows()).transpose() * y).colwise() + bias;
         }
 
         template<typename _EigenTy>
