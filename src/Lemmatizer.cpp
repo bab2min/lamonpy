@@ -111,7 +111,7 @@ string Lemmatizer::to_perseus_tag(Feature f, char pos)
 		{'c', 'c'},
 		{'p', 'r'},
 		{'r', 'p'},
-		{'u', 'u'},
+		{'u', 'm'},
 		{'i', 'i'},
 	};
 	string ret;
@@ -136,6 +136,106 @@ string Lemmatizer::to_perseus_tag(Feature f, char pos)
 	ret.push_back("-ngdabv-"[f.case_]);
 	ret.push_back("-pcs"[pos == 'a' && f.degree == 0 ? 1 : f.degree]);
 	return ret;
+}
+
+bool Lemmatizer::is_numeral(const string& token)
+{
+	static string numeral_chrs = "iuxlcdm";
+
+	if (token.empty()) return false;
+
+	if (all_of(token.begin(), token.end(), [](char c) 
+	{
+		return ('0' <= c && c <= '9') || c == '.' || c == ',';
+	}) && any_of(token.begin(), token.end(), [](char c)
+	{
+		return '0' <= c && c <= '9';
+	}))
+	{
+		return true;
+	}
+
+	if (all_of(token.begin(), token.end(), [&](char c)
+	{
+		return numeral_chrs.find(c) != numeral_chrs.npos;
+	}))
+	{
+		const char* it = token.c_str();
+		for (size_t i = 0; i < 4; ++i)
+		{
+			if (*it != 'm') break;
+			++it;
+		}
+
+		if (!*it) return true;
+		else if (*it == 'c')
+		{
+			++it;
+			if (*it == 'm' || *it == 'd') ++it;
+			else if (*it == 'c')
+			{
+				++it;
+				if (*it == 'c') ++it;
+			}
+		}
+		else if (*it == 'd')
+		{
+			++it;
+			for (size_t i = 0; i < 3; ++i)
+			{
+				if (*it != 'c') break;
+				++it;
+			}
+		}
+
+		if (!*it) return true;
+		else if (*it == 'x')
+		{
+			++it;
+			if (*it == 'c' || *it == 'l') ++it;
+			else if (*it == 'x')
+			{
+				++it;
+				if (*it == 'x') ++it;
+			}
+		}
+		else if (*it == 'l')
+		{
+			++it;
+			for (size_t i = 0; i < 3; ++i)
+			{
+				if (*it != 'x') break;
+				++it;
+			}
+		}
+
+		if (!*it) return true;
+		else if (*it == 'i')
+		{
+			++it;
+			if (*it == 'x' || *it == 'u') ++it;
+			else if (*it == 'i')
+			{
+				++it;
+				if (*it == 'i') ++it;
+				if (*it == 'i') ++it;
+			}
+		}
+		else if (*it == 'u')
+		{
+			++it;
+			for (size_t i = 0; i < 3; ++i)
+			{
+				if (*it != 'i') break;
+				++it;
+			}
+		}
+
+		if (*it) return false;
+		return true;
+	}
+
+	return false;
 }
 
 void Lemmatizer::load_dictionary(istream& vocab, istream& infl)
@@ -189,6 +289,12 @@ void Lemmatizer::load_dictionary(istream& vocab, istream& infl)
 
 	lemma_pos.resize(lemmas.size());
 	for (auto& p : id_to_pos) lemma_pos[p.first] = p.second;
+
+	auto it = lemma_invmap.find("[NUM]");
+	if (it != lemma_invmap.end())
+	{
+		num_tok_id = it->second;
+	}
 }
 
 template<typename _ChrIt>
@@ -229,6 +335,12 @@ void Lemmatizer::load_model(istream& ifs)
 	for (size_t i = 0; i < lemmas.size(); ++i)
 	{
 		lemma_invmap.emplace(lemmas[i], i);
+	}
+
+	auto it = lemma_invmap.find("[NUM]");
+	if (it != lemma_invmap.end())
+	{
+		num_tok_id = it->second;
 	}
 }
 
@@ -295,9 +407,15 @@ auto Lemmatizer::lemmatize(const char* str, size_t len) const -> vector<TokenInf
 			if (it != form2lemma.end())
 			{
 				ret.back().lemma_cands = it->second;
-				continue;
 			}
 		}
+
+		if (num_tok_id && is_numeral(token))
+		{
+			ret.back().lemma_cands.emplace_back(num_tok_id);
+		}
+
+		if (!ret.back().lemma_cands.empty()) continue;
 		
 		if (token.size() > 3)
 		{
@@ -350,7 +468,7 @@ auto Lemmatizer::tag(const LatinRnnModel& tagging_model,
 		// unknown token
 		if (tokens[t].lemma_cands.empty())
 		{
-			LatinRnnModel::DecOutput dec;
+			RnnCell::DecOutput dec;
 			dec.first = tagging_model.get_unk_token();
 			if (all_of(&str[tokens[t].start], &str[tokens[t].end], isalpha))
 			{
@@ -360,22 +478,12 @@ auto Lemmatizer::tag(const LatinRnnModel& tagging_model,
 					dec.second.number = (i / 6) % 2 + 1;
 					dec.second.case_ = i % 6 + 1;
 
-					float score = r.token_logits[dec.first];
-					for (size_t i = 0; i < r.feat_logits.size(); ++i)
-					{
-						score += r.feat_logits[i][dec.second[i]];
-					}
-					ret.emplace_back(score, dec);
+					ret.emplace_back(r[dec], dec);
 				}
 			}
 			else
 			{
-				float score = r.token_logits[dec.first];
-				for (size_t i = 0; i < r.feat_logits.size(); ++i)
-				{
-					score += r.feat_logits[i][dec.second[i] = 0];
-				}
-				ret.emplace_back(score, dec);
+				ret.emplace_back(r[dec], dec);
 			}
 		}
 		// known token
@@ -383,15 +491,10 @@ auto Lemmatizer::tag(const LatinRnnModel& tagging_model,
 		{
 			for (auto& c : tokens[t].lemma_cands)
 			{
-				LatinRnnModel::DecOutput dec;
-				float score = r.token_logits[c.lemma_id];
+				RnnCell::DecOutput dec;
 				dec.first = c.lemma_id;
 				dec.second = c.feature;
-				for (size_t i = 0; i < r.feat_logits.size(); ++i)
-				{
-					score += r.feat_logits[i][dec.second[i]];
-				}
-				ret.emplace_back(score, dec);
+				ret.emplace_back(r[dec], dec);
 			}
 		}
 		sort(ret.rbegin(), ret.rend());

@@ -345,4 +345,4 @@ healthchecksdb
 /lamonpy.egg-info
 /*.bin
 .vscode
-dist
+/dist

@@ -10,10 +10,10 @@
 namespace lamon
 {
     template<typename _Ty = float>
-    using ConstMatrix = Eigen::Map<const Eigen::Matrix<_Ty, -1, -1>, Eigen::Aligned128>;
+    using ConstMatrix = Eigen::Map<const Eigen::Matrix<_Ty, -1, -1>, Eigen::Aligned64>;
 
     template<typename _Ty = float>
-    using ConstVector = Eigen::Map<const Eigen::Matrix<_Ty, -1, 1>, Eigen::Aligned128>;
+    using ConstVector = Eigen::Map<const Eigen::Matrix<_Ty, -1, 1>, Eigen::Aligned64>;
 
     namespace utils
     {

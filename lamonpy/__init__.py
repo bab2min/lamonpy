@@ -7,7 +7,7 @@ except: pass
 
 def _load():
     import importlib, os
-    env_setting = os.environ.get('LAMONPY_ISA', '').split(',')
+    env_setting = os.environ.get('LAMONPY_ISA', '').lower().split(',')
     if not env_setting[0]: env_setting = []
     if len(env_setting) == 0 or len(env_setting) > 1:
         from cpuinfo import get_cpu_info
@@ -15,8 +15,12 @@ def _load():
     else:
         flags = []
     isas = ['avx2', 'avx', 'sse2', 'none']
-    isas = [isa for isa in isas if (env_setting and isa in env_setting) or (not env_setting and (isa in flags or isa == 'none'))]
-    if not isas: raise RuntimeError("No available isa option for " + str(env_setting))
+    if env_setting: isas = [i for i in isas if i in env_setting]
+    if len(isas) > 1:
+        from cpuinfo import get_cpu_info
+        flags = get_cpu_info()['flags']
+        isas = [isa for isa in isas if (isa in flags or isa == 'none')]
+        if not isas: raise RuntimeError("No isa option for " + str(env_setting))
     for isa in isas:
         try:
             mod_name = '_lamonpy' + ('_' + isa if isa != 'none' else '')
