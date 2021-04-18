@@ -3,7 +3,8 @@ Lamon, The Latin POS Tagger & Lemmatizer
 
 .. image:: https://badge.fury.io/py/lamonpy.svg
     :target: https://pypi.python.org/pypi/lamonpy
-
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4091536.svg
+   :target: https://doi.org/10.5281/zenodo.4091536
 
 `Lamon` (LAtin MOrphological tools, pronounced /leɪmən/) is a simple POS tagger & lemmatizer for Latin written in C++ 
 and `Lamonpy` is a Python package of Lamon. You can easily obtain lemma and tag of each word in given text using Lamonpy.
@@ -254,3 +255,18 @@ History
     * The accuracy was slightly increased by introducing joint lemma-tag layer.
 * 0.1.0 (2020-09-26)
     * the first version of `lamonpy`
+
+Citation
+--------
+::
+
+    @software{bab2min_2020_4091536,
+      author       = {bab2min},
+      title        = {bab2min/lamonpy: 0.2.0},
+      month        = oct,
+      year         = 2020,
+      publisher    = {Zenodo},
+      version      = {v0.2.0},
+      doi          = {10.5281/zenodo.4091536},
+      url          = {https://doi.org/10.5281/zenodo.4091536}
+    }
