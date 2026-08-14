@@ -1,9 +1,29 @@
 import sys
 from setuptools import setup, Extension
 import numpy as np
-import os, os.path, struct, re, platform
-
 here = os.path.abspath(os.path.dirname(__file__))
+import os, os.path, struct, re, platform
+import urllib.request
+import tarfile
+import tempfile
+import shutil
+
+eigen_dir = os.path.join(here, 'include', 'Eigen')
+if not os.path.isdir(eigen_dir):
+    eigen_url = 'https://github.com/eigenteam/eigen-git-mirror/archive/refs/tags/3.3.7.tar.gz'
+    print("Downloading Eigen 3.3.7...")
+    with urllib.request.urlopen(eigen_url) as resp, tempfile.NamedTemporaryFile(delete=False, suffix='.tar.gz') as f:
+        shutil.copyfileobj(resp, f)
+        temp_tar = f.name
+    try:
+        with tarfile.open(temp_tar, 'r:gz') as tar:
+            tar.extractall(path=here)
+        src_path = os.path.join(here, 'eigen-git-mirror-3.3.7')
+        os.makedirs(os.path.dirname(eigen_dir), exist_ok=True)
+        shutil.move(src_path, eigen_dir)
+    finally:
+        os.remove(temp_tar)
+
 long_description = ''
 for line in open(os.path.join(here, 'README.rst'), encoding='utf-8'):
     long_description += re.sub(r'^<.+>\s*$', '', line)
